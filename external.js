@@ -1,45 +1,41 @@
-// global variables
-var questions // objects containing the quiz questions
-var count, score, scorePercentage, answer // tracking variables
-var correctAnswer, prevFlag, nextFlag // flags
-var choices, question, resultsPara, choicesPara // elements being updated
-var resetButton, prevButton, nextButton // buttons
-var progress, progressPercentage // progress bar
-
-questions = [
+const questions = [
   {
-    number: 0,
+    order: 0,
     question: "Who lived at 25 Cromwell Street?",
-    choices: [
+    type: "single",
+    options: [
       "Jack the Ripper",
       "Ian Bradley and Myra Hindley",
       "Fred and Rose West",
       "The Yorkshire Ripper",
     ],
-    answer: 2,
+    answers: [0, 2],
   },
   {
-    number: 1,
+    order: 1,
     question: "How did Ted Bundy lure his victims in?",
-    choices: [
+    type: "multi",
+    options: [
       "Pretending to be an officer",
       "Pretending to be injured",
       "Asking them out on a date",
       "Knocking them out",
     ],
-    answer: 1,
+    answer: [1, 2],
   },
   {
-    number: 2,
+    order: 2,
     question: 'What year was the term "serial killer" coined in America?',
-    choices: ["1912", "1996", "1960", "1976"],
-    answer: 3,
+    type: "multi",
+    options: ["1912", "1996", "1960", "1976"],
+    answer: [1, 3],
   },
   {
-    number: 3,
+    order: 3,
     question:
       "What cult inspired Timothy McVeigh, the Oklahoma City Bomber, to do what he did?",
-    choices: [
+    type: "single",
+    options: [
       "The Branch Dividians",
       "Children of God",
       "The Manson Family",
@@ -48,22 +44,25 @@ questions = [
     answer: 0,
   },
   {
-    number: 4,
+    order: 4,
     question: "How many people did Ed Gein kill?",
-    choices: ["10", "25", "2", "6"],
+    type: "single",
+    options: ["10", "25", "2", "6"],
     answer: 2,
   },
   {
-    number: 5,
+    order: 5,
     question: "How many was Ed Gein convicted for?",
-    choices: ["0", "1", "10", "16"],
-    answer: 1,
+    type: "multi",
+    options: ["0", "1", "10", "16"],
+    answer: [1, 3],
   },
   {
-    number: 6,
+    order: 6,
     question:
       "What was Brenda Spencer's reason for her killing spree at Cleveland Elementary School?",
-    choices: [
+    type: "single",
+    options: [
       "She didn't like Mondays",
       "She was being bullied",
       "She wanted to see what killing was like",
@@ -72,9 +71,10 @@ questions = [
     answer: 0,
   },
   {
-    number: 7,
+    order: 7,
     question: 'What does Dennis Rader\'s nickname, "BTK", stand for?',
-    choices: [
+    type: "single",
+    options: [
       "Bind, Torture, Kill",
       "Blindfold, Tickle, Kill",
       "Bind, Tickle, Kill",
@@ -83,32 +83,35 @@ questions = [
     answer: 0,
   },
   {
-    number: 8,
+    order: 8,
     question: "What was Sacramento serial killer Richard Chase's nickname?",
-    choices: [
+    type: "multi",
+    options: [
       "The Night Stalker",
       "The Vampire of Sacramento",
       "The East Area Rapist",
       "The Zodiac Killer",
     ],
-    answer: 1,
+    answer: [1, 3],
   },
   {
-    number: 9,
+    order: 9,
     question: "Which woman was thought to be the first serial killer?",
-    choices: [
+    type: "multi",
+    options: [
       "Aileen Wuornos",
       "Belle Gunness",
       "Jane Toppan",
       "Lavinia Fisher",
     ],
-    answer: 3,
+    answer: [1, 3],
   },
   {
-    number: 10,
+    order: 10,
     question:
       "What book was the torn page from that was found with the Somerton Man?",
-    choices: [
+    type: "single",
+    options: [
       "The Rudaiyat of Omar Khayyan",
       "The Bible",
       "The Great Gatsby",
@@ -117,57 +120,65 @@ questions = [
     answer: 0,
   },
   {
-    number: 11,
+    order: 11,
     question: "How many years was Jaycee LeeDugard held against her own will?",
-    choices: ["1 year", "8 years", "25 years", "3 years"],
-    answer: 1,
+    type: "multi",
+    options: ["1 year", "8 years", "25 years", "3 years"],
+    answer: [1, 3],
   },
   {
-    number: 12,
+    order: 12,
     question: "What disorder did the Eriksson Twins suffer from?",
-    choices: ["Bipolar", "Schizophrenia", "Depression", "Folie a deux"],
+    type: "single",
+    options: ["Bipolar", "Schizophrenia", "Depression", "Folie a deux"],
     answer: 3,
   },
   {
-    number: 13,
+    order: 13,
     question:
       'What country was the infamous "Who put Bella in the wych-elm" body found?',
-    choices: ["England", "Ireland", "Scotland", "Poland"],
+    type: "single",
+    options: ["England", "Ireland", "Scotland", "Poland"],
     answer: 1,
   },
   {
-    number: 14,
+    order: 14,
     question: "What was John Wayne Gacy known as?",
-    choices: [
+    type: "multi",
+    options: [
       "The Killer Clown",
       "The Midwest Killer",
       "The Hillside Strangler",
       "The Candyman",
     ],
-    answer: 0,
+    answer: [1, 3],
   },
   {
-    number: 15,
+    order: 15,
     question: "Who was Leonard Lake's partner in crime?",
-    choices: ["Dean Corll", "Charles Ng", "David Burkowitz", "Ottis Toole"],
-    answer: 1,
+    type: "multi",
+    options: ["Dean Corll", "Charles Ng", "David Burkowitz", "Ottis Toole"],
+    answer: [1, 3],
   },
   {
-    number: 16,
+    order: 16,
     question: "What country did Andrei Chikatilo hail from?",
-    choices: ["England", "Japan", "America", "Russia"],
+    type: "single",
+    options: ["England", "Japan", "America", "Russia"],
     answer: 3,
   },
   {
-    number: 17,
+    order: 17,
     question: "What state was The Green River Killer active in?",
-    choices: ["Ohio", "New York", "California", "Washington"],
-    answer: 3,
+    type: "multi",
+    options: ["Ohio", "New York", "California", "Washington"],
+    answer: [1, 3],
   },
   {
-    number: 18,
+    order: 18,
     question: "Who was known to be Jack the Ripper's last victim?",
-    choices: [
+    type: "single",
+    options: [
       "Martha Tabram",
       "Catherine Eddowes",
       "Mary Ann Nichols",
@@ -176,31 +187,31 @@ questions = [
     answer: 3,
   },
   {
-    number: 19,
+    order: 19,
     question:
       "What was the movie The Zodiac Killer referred to as the best satirical comedy?",
-    choices: ["The Exorcist", "Halloween", "Jaws", "Amityville Horror"],
+    type: "single",
+    options: ["The Exorcist", "Halloween", "Jaws", "Amityville Horror"],
     answer: 0,
   },
 ]
 
 // set tracking variables
-count = 0
-score = 0
-correctAnswer = false
-prevFlag = true
-nextFlag = true
+let count = 0
+let answer = null
+let prevFlag = false
+let nextFlag = true
+let isToNext = false
 
 // grab html elements
-choices = document.querySelectorAll(".choices")
-question = document.getElementsByTagName("h2")[0]
-resultsPara = document.getElementsByTagName("p")[0]
-choicesPara = document.getElementsByTagName("p")[1]
+const options = document.querySelectorAll(".options")
+const question = document.getElementsByTagName("h2")[0]
+const optionsPara = document.getElementsByTagName("p")[1]
 
-resetButton = document.getElementsByClassName("reset")[0]
-prevButton = document.getElementsByClassName("prev")[0]
-nextButton = document.getElementsByClassName("next")[0]
-progress = document.getElementsByClassName("progress-bar")[0]
+const resetButton = document.getElementsByClassName("reset")[0]
+const prevButton = document.getElementsByClassName("prev")[0]
+const nextButton = document.getElementsByClassName("next")[0]
+const progress = document.getElementsByClassName("progress-bar")[0]
 
 // add the event listeners
 window.onload = renderQuestion()
@@ -208,9 +219,8 @@ window.onload = renderQuestion()
 prevButton.addEventListener("click", prevQuestion)
 nextButton.addEventListener("click", nextQuestion)
 resetButton.addEventListener("click", resetQuiz)
-choices.forEach(function (choice) {
+options.forEach(function (choice) {
   choice.addEventListener("click", scoring)
-  choice.addEventListener("click", nextscoring)
 })
 
 // functions used
@@ -219,42 +229,21 @@ function scoring() {
   answer = questions[count].answer
   // prevButton is visible when a choice is selected
   prevFlag = true
-
-  // THIS is the span.choice that the user clicked
-  if (this.innerText === questions[count].choices[answer]) {
-    // correctAnswer waves for prevButton use
-    correctAnswer = true
-    score++
-  } else {
-    correctAnswer = false
+  isToNext = true
+  if (questions[count].type === "single") {
+    nextQuestion()
   }
-
-  // then render next question
-  nextQuestion()
-}
-
-function nextscoring() {
-  // grab the answer of the current question
-  answer = questions[count].answer
-  // prevButton is visible when a choice is selected
-  nextFlag = true
-
-  // THIS is the span.choice that the user clicked
-  if (this.innerText === questions[count].choices[answer]) {
-    // correctAnswer waves for prevButton use
-    correctAnswer = true
-    score++
-  } else {
-    correctAnswer = false
-  }
-
-  // then render next question
-  nextQuestion()
 }
 
 function nextQuestion() {
   // count goes up
-  count++
+  // count++
+  prevFlag = true
+
+  if (isToNext === true) {
+    count++
+    isToNext = false
+  }
 
   if (count > 20) {
     count = 20
@@ -271,12 +260,6 @@ function nextQuestion() {
 function prevQuestion() {
   // when the previous question renders, remove the prevButton
   prevFlag = true
-
-  // if the user originally clicked the correctAnswer, remove score
-  if (correctAnswer) {
-    correctAnswer = false
-    score--
-  }
 
   // then go back and render the old question
   count--
@@ -301,9 +284,9 @@ function renderQuestion() {
   // update question div with current question
   question.innerText = questions[count].question
 
-  // update each choice with the choices available in current question
-  choices.forEach(function (choice, i) {
-    choice.innerText = questions[count].choices[i]
+  // update each choice with the options available in current question
+  options.forEach(function (choice, i) {
+    choice.innerText = questions[count].options[i]
   })
 
   updateProgress()
@@ -311,14 +294,11 @@ function renderQuestion() {
 
 function renderCompletion() {
   updateProgress()
-  scorePercentage = Math.round((score / 20) * 100) + "%"
 
-  // update with a thank you note and the user's percentage
+  // update with a thank you note
   question.innerText = "Thank you for Completing the Quiz!"
-  // resultsPara.innerText = 'Your score is: ' + scorePercentage;
 
-  // reset avail, prevButton and choicesPara are removed
-  choicesPara.classList.add("hide")
+  // reset avail, prevButton are removed
   prevButton.classList.add("hide")
   nextButton.classList.add("hide")
   resetButton.classList.remove("hide")
@@ -326,23 +306,17 @@ function renderCompletion() {
 
 function updateProgress() {
   // progress bar will be updated as count goes up
-  progressPercentage = Math.round((count / 20) * 100)
+  const progressPercentage = Math.round((count / 20) * 100)
   progress.style.width = progressPercentage + "%"
 }
 
 function resetQuiz() {
   // reset tracking variables
   count = 0
-  score = 0
-  correctAnswer = false
   prevFlag = true
   nextFlag = true
 
-  // resultsPara is hidden
-  resultsPara.innerText = ""
-
-  // choicesPara displays while resetButton is hidden
-  choicesPara.classList.remove("hide")
+  // while resetButton is hidden
   resetButton.classList.add("hide")
 
   renderQuestion()
