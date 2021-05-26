@@ -89,10 +89,11 @@ span:hover {
 }
 
 .buttons {
-	position: absolute;
-	bottom: -10%;
+	position: relative;
+	/* bottom: -10%; */
 	left: 0;
 	right: 0;
+	top: 20px;
 }
 
 .buttons button {
@@ -151,4 +152,28 @@ button:focus {
 	.buttons {
 		bottom: -20%;
 	}
+}
+
+/* Quiz CSS */
+#quizWrapper {
+	display: flex;
+}
+.question_type {
+	background-color: #fec;
+	padding: 20px;
+	margin: 10px;
+	flex: 1 0 100%;
+	min-height: 300px;
+}
+
+.answers_list li {
+	padding: 15px;
+	cursor: pointer;
+}
+.answers_list li:hover, .answers_list li.selected {
+	background-color: rgba(0, 0, 0, 0.25)
+}
+.disabled {
+	pointer-events: none;
+	opacity: 0.5;
 }

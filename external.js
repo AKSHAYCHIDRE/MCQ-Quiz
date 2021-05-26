@@ -196,6 +196,7 @@ const questions = [
   },
 ]
 
+
 // set tracking variables
 let count = 0
 let answer = null
@@ -208,20 +209,20 @@ const options = document.querySelectorAll('.options')
 const question = document.getElementsByTagName('h2')[0]
 const optionsPara = document.getElementsByTagName('p')[1]
 
-const resetButton = document.getElementsByClassName('reset')[0]
-const prevButton = document.getElementsByClassName('prev')[0]
-const nextButton = document.getElementsByClassName('next')[0]
+// const resetButton = document.getElementsByClassName('reset')[0]
+// const prevButton = document.getElementsByClassName('prev')[0]
+// const nextButton = document.getElementsByClassName('next')[0]
 const progress = document.getElementsByClassName('progress-bar')[0]
 
 // add the event listeners
 window.onload = renderQuestion()
 
-prevButton.addEventListener('click', prevQuestion)
-nextButton.addEventListener('click', nextQuestion)
-resetButton.addEventListener('click', resetQuiz)
-options.forEach(function (choice) {
-  choice.addEventListener('click', scoring)
-})
+// prevButton.addEventListener('click', prevQuestion)
+// nextButton.addEventListener('click', nextQuestion)
+// resetButton.addEventListener('click', resetQuiz)
+// options.forEach(function (choice) {
+//   choice.addEventListener('click', scoring)
+// })
 
 // functions used
 function scoring() {
@@ -257,29 +258,29 @@ function nextQuestion() {
 }
 
 // the prevButton will only be available to go back one question
-function prevQuestion() {
-  // when the previous question renders, remove the prevButton
-  prevFlag = true
+// function prevQuestion() {
+//   // when the previous question renders, remove the prevButton
+//   prevFlag = true
 
-  // then go back and render the old question
-  count--
-  renderQuestion()
-}
+//   // then go back and render the old question
+//   count--
+//   renderQuestion()
+// }
 
 function renderQuestion() {
   // prevButton is hidden on the first page
   // and if the user attempts to go back more than one question
-  if (!prevFlag) {
-    prevButton.classList.add('hide')
-  } else if (prevButton.classList.contains('hide')) {
-    prevButton.classList.remove('hide')
-  }
+  // if (!prevFlag) {
+  //   prevButton.classList.add('hide')
+  // } else if (prevButton.classList.contains('hide')) {
+  //   prevButton.classList.remove('hide')
+  // }
 
-  if (!nextFlag) {
-    nextButton.classList.add('hide')
-  } else if (nextButton.classList.contains('hide')) {
-    nextButton.classList.remove('hide')
-  }
+  // if (!nextFlag) {
+  //   nextButton.classList.add('hide')
+  // } else if (nextButton.classList.contains('hide')) {
+  //   nextButton.classList.remove('hide')
+  // }
 
   // update question div with current question
   question.innerText = questions[count].question
