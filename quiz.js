@@ -146,6 +146,29 @@ function prevQuestion() {
 	quizWrapper.replaceChild(createQuestionUI(questions[currentQuestion]), quizWrapper.childNodes[0])
 }
 
+function toggleSelectedAnswer() {
+
+}
+
+const selectAnswer = (e, currentQuestion) => {
+	
+	// check li click only
+	if(e.target.tagName !== 'LI') return
+	console.log(`e.target`, e.target.dataset.id)
+
+
+	// toggle selection class
+	if(currentQuestion && !currentQuestion.userSelectedAnswers) currentQuestion.userSelectedAnswers = []
+// TODO selected answers object with API
+	if(e.target.classList.contains('selected')) {
+		e.target.classList.remove('selected')	
+		// Answers is in userSelectedAnswers remove it
+		if(currentQuestion.userSelectedAnswers.includes(e.target.dataset.id)) currentQuestion.userSelectedAnswers.splice(e.target.dataset.id, 1)
+		return
+	}
+	e.target.classList.add('selected')
+	currentQuestion && currentQuestion.userSelectedAnswers.push(e.target.dataset.id)
+}
 
 // TODO: 
 // 1. save User selection of quiz on UI and in data as well
@@ -172,10 +195,12 @@ function createQuestionUI(q) {
 	// answers wrapper
 	const list =  document.createElement('ul')
 	list.setAttribute('class', 'answers_list')
+	list.addEventListener('click', (event) => selectAnswer(event, q))
 
 	// create list of answers
-	q.options.map( option => {
+	q.options.map( (option, index) => {
 		const li = document.createElement('Li')
+		li.setAttribute('data-id', `${index}`)
 		const liText = document.createTextNode(option)
 		li.appendChild(liText)
 		list.appendChild(li)
@@ -186,7 +211,6 @@ function createQuestionUI(q) {
 	questionWrapper.appendChild(list)
 
 
-	// console.log(`questionWrapper`, questionWrapper)
 	return questionWrapper
 	// return (
 	// 	<div class='question_mcq'>

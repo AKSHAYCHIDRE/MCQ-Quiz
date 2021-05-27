@@ -170,8 +170,11 @@ button:focus {
 	padding: 15px;
 	cursor: pointer;
 }
-.answers_list li:hover, .answers_list li.selected {
-	background-color: rgba(0, 0, 0, 0.25)
+.answers_list li:hover {
+	background-color: rgba(0, 0, 0, 0.15)
+}
+.answers_list li.selected {
+	background-color: rgba(0, 0, 0, 0.5)
 }
 .disabled {
 	pointer-events: none;
