@@ -116,34 +116,53 @@ const questions = [
   }
 ]
 
+// use for progress and UI presentations
 let currentQuestion = 0
-const quizLength =  questions.length
+const quizLength =  questions.length-1
 
 // UI element catching for DOM manipulation
 const quizPage = document.getElementById('quizPage')
 const quizWrapper = document.getElementById('quizWrapper')
 const nextButton = document.getElementById('nextButton')
 const prevButton = document.getElementById('prevButton')
+const submitButton = document.getElementById('submitButton')
 
+const progressTracker = document.getElementById('progressTracker')
+
+function updateProgress() {
+  // progress bar will be updated as count goes up
+  const progressPercentage = Math.round((currentQuestion / quizLength) * 100)
+  progressTracker.style.width = progressPercentage + '%'
+}
 
 function nextQuestion() {
 	currentQuestion++;
+	updateProgress()
 	// disable if last question
 	if(prevButton.classList.contains('disabled')) prevButton.classList.remove('disabled')
-	if(currentQuestion === quizLength-1) {
+	if(currentQuestion === quizLength) {
 		nextButton.classList.add('disabled')
+		submitButton.classList.remove('hide')
+		// Enable submit
 	}
-	quizWrapper.replaceChild(createQuestionUI(questions[currentQuestion]), quizWrapper.childNodes[0])
+	quizWrapper.innerHTML = ''
+	quizWrapper.appendChild(createQuestionUI(questions[currentQuestion]))
 }
 
 function prevQuestion() {
 	currentQuestion--;
-	if(nextButton.classList.contains('disabled')) nextButton.classList.remove('disabled')
+	updateProgress()
+	if(nextButton.classList.contains('disabled')) {
+		nextButton.classList.remove('disabled')
+		submitButton.classList.add('hide')
+	}
 	// disable if first question
 	if(currentQuestion === 0) {
 		prevButton.classList.add('disabled')
 	}
-	quizWrapper.replaceChild(createQuestionUI(questions[currentQuestion]), quizWrapper.childNodes[0])
+	// clear exiting question and add 
+	quizWrapper.innerHTML = ''
+	quizWrapper.appendChild(createQuestionUI(questions[currentQuestion]))
 }
 
 function toggleSelectedAnswer() {
@@ -154,20 +173,24 @@ const selectAnswer = (e, currentQuestion) => {
 	
 	// check li click only
 	if(e.target.tagName !== 'LI') return
-	console.log(`e.target`, e.target.dataset.id)
-
+	let currentSelectedOption = e.target.dataset.id
 
 	// toggle selection class
 	if(currentQuestion && !currentQuestion.userSelectedAnswers) currentQuestion.userSelectedAnswers = []
-// TODO selected answers object with API
+	
+	// TODO: selected answers object with API
 	if(e.target.classList.contains('selected')) {
 		e.target.classList.remove('selected')	
 		// Answers is in userSelectedAnswers remove it
-		if(currentQuestion.userSelectedAnswers.includes(e.target.dataset.id)) currentQuestion.userSelectedAnswers.splice(e.target.dataset.id, 1)
+		if(currentQuestion.userSelectedAnswers.includes(currentSelectedOption)) currentQuestion.userSelectedAnswers.splice(currentQuestion.userSelectedAnswers.indexOf(currentSelectedOption), 1)
+		
 		return
 	}
 	e.target.classList.add('selected')
-	currentQuestion && currentQuestion.userSelectedAnswers.push(e.target.dataset.id)
+	if(!currentQuestion.userSelectedAnswers.includes(currentSelectedOption)) currentQuestion.userSelectedAnswers.push(currentSelectedOption)
+	
+	// Boolean question should go to next question directly
+	currentQuestion.type === 'BOOLEAN' && nextQuestion()
 }
 
 // TODO: 
@@ -197,14 +220,31 @@ function createQuestionUI(q) {
 	list.setAttribute('class', 'answers_list')
 	list.addEventListener('click', (event) => selectAnswer(event, q))
 
+
 	// create list of answers
 	q.options.map( (option, index) => {
 		const li = document.createElement('Li')
 		li.setAttribute('data-id', `${index}`)
+
+		// If questions addressed already but using previous menu checking back, should show selected
+		if(q.userSelectedAnswers && q.userSelectedAnswers.length > 0) {
+			q.userSelectedAnswers.forEach( e => {
+				if (e == index) {
+					li.classList.add('selected')
+				} 
+			})
+		}
+
 		const liText = document.createTextNode(option)
 		li.appendChild(liText)
+		
+
+		
 		list.appendChild(li)
 	})	
+
+		
+
 
 	// add all created elements to wrapper
 	questionWrapper.appendChild(question)
@@ -224,10 +264,15 @@ function createQuestionUI(q) {
 	// )
 }
 
+function submitQuiz() {
+	console.log('User Selected answers from quiz!', questions)
+}
+ 
 function init() {
 	// onload settings 
 	// disable prev as first load is 0
 	prevButton.classList.add('disabled')
+	submitButton.classList.add('hide')
 	quizWrapper.appendChild(createQuestionUI(questions[currentQuestion]))
 }
 
